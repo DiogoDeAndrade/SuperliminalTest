@@ -3,6 +3,8 @@
 I saw this video of the game Superliminal (https://www.epicgames.com/store/en-US/product/superliminal/home), and I thought the effect was brilliant.
 So, I decided to try to implement it for myself, see what it would entail, and these are the results.
 
+![alt text](https://github.com/DiogoDeAndrade/SuperliminalTest/raw/master/Screenshots/screen01.gif "Test")
+
 Basically, the effect uses the scaling elements of the projection matrix to ensure the object stays the same size in the view, even if we put it closer of further away.
 So, when we grab an object, we put the object as a child of the camera, and scale it based on the original distance.
 When we release it, we have to use a coroutine to split the collision tests in several frames. 
@@ -26,8 +28,6 @@ If you want to try to use the scripts yourself:
 - Doesn't check for valid drop positions
 - Physics can sometimes make the player move back when dropping the object too close
 
-
-![alt text](https://github.com/DiogoDeAndrade/SuperliminalTest/raw/master/Screenshots/screen01.gif "Test")
 
 ## Licenses
 
