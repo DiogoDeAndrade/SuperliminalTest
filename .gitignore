@@ -1,0 +1,12 @@
+.vs
+Temp
+*.userprefs
+*.csproj
+*.sln
+*.pdb
+Library/*
+*.DS_Store
+obj/*
+Logs/*
+Builds/*
+*/__pycache__/*
