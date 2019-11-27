@@ -13,7 +13,6 @@ public class Grabber : MonoBehaviour
     Interactive grabbedObject;
     Camera      grabCamera;
 
-    // Start is called before the first frame update
     void Start()
     {
         cursor.color = normalColor;
@@ -28,20 +27,20 @@ public class Grabber : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         Interactive currentObject = null;
         
         Ray ray = new Ray(castStartTransform.position, castStartTransform.forward);
 
-        RaycastHit hitInfo;
-        if (Physics.Raycast(ray, out hitInfo))
+        RaycastHit[] hitInfos = Physics.SphereCastAll(ray, 0.5f, 200.0f, LayerMask.GetMask("Interactive"));
+        foreach (var hitInfo in hitInfos)
         {
             currentObject = hitInfo.collider.GetComponent<Interactive>();
             if (currentObject == null)
             {
                 currentObject = hitInfo.collider.GetComponentInParent<Interactive>();
+                break;
             }            
         }
 
@@ -58,18 +57,13 @@ public class Grabber : MonoBehaviour
         {
             if (grabbedObject)
             {
-/*                float   scale;
-                    Vector3 pos = grabbedObject.GetTargetPosition(castStartTransform.forward, grabCamera, out scale);*/
-
-                grabbedObject.transform.SetParent(null);
-
-                grabbedObject.ProjectObject(castStartTransform.forward, grabCamera);
-
-//                grabbedObject.transform.position = pos;
-//                grabbedObject.transform.localScale = new Vector3(scale, scale, scale);
-                grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
-                grabbedObject = null;
-                cursor.enabled = true;
+                grabbedObject.ThrowObjectConstantSize(castStartTransform.forward, grabCamera,
+                    (b) =>
+                    {
+                        grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
+                        grabbedObject = null;
+                        cursor.enabled = true;
+                    });
             }
             else
             {
@@ -83,21 +77,12 @@ public class Grabber : MonoBehaviour
                     Vector3 s = grabbedObject.transform.localScale / ds;
 
                     grabbedObject.transform.SetParent(castStartTransform);
-                    grabbedObject.transform.localPosition = new Vector3(0, 0, 2.0f);
-                    grabbedObject.transform.localScale = s * 2.0f * m00;
+                    grabbedObject.transform.localPosition = new Vector3(0, 0, 1.0f);
+                    grabbedObject.transform.localScale = s * 1.0f * m00;
                     grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
                     cursor.enabled = false;
                 }                
             }
         }
     }
-
-    /*private void OnDrawGizmos()
-    {
-        if (castStartTransform)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, transform.position + castStartTransform.forward * 100);
-        }
-    }//*/
 }
